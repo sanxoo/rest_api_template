@@ -11,7 +11,7 @@ _config = {
             "file" : {
                 "formatter": "default",
                 "class": "logging.handlers.RotatingFileHandler",
-                "filename": "/home/sanxoo/py/rest_api_template/log/api.log",
+                "filename": "./log/api.log",
                 "mode": "a",
                 "maxBytes": 10 * 1024 * 1024,
                 "backupCount": 9
@@ -34,7 +34,10 @@ _config = {
         "port": 8080
     },
 
-    "database.url": "sqlite:///./db.sqlite/rest_api_template.db"
+    "database.url": {
+        "real": "sqlite:///./db.sqlite/real.db",
+        "test": "sqlite:///./db.sqlite/test.db"
+    }
 }
 
 get = _config.get

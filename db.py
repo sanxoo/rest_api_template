@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 import config
 
-engine = create_engine(config.get("database.url"), connect_args={"check_same_thread": False})
+engine = create_engine(config.get("database.url").get("real"), connect_args={"check_same_thread": False})
 
 Base = declarative_base()
 
@@ -19,8 +19,11 @@ class Item(Base):
     created = Column(DateTime, default=datetime.now)
     updated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-def init():
+def init(engine=engine):
     Base.metadata.create_all(bind=engine)
+
+def drop(engine=engine):
+    Base.metadata.drop_all(bind=engine)
 
 Session = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 

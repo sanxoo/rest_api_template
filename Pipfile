@@ -9,6 +9,7 @@ uvicorn = "*"
 sqlalchemy = "*"
 fastapi-utils = "*"
 pytest = "*"
+requests = "*"
 
 [dev-packages]
 

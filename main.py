@@ -8,8 +8,6 @@ import server
 
 api = FastAPI()
 
-db.init()
-
 @api.get("/items", status_code=200, response_model=model.ItemBunch)
 def getItemBunch(order_by:str="title", offset:int=0, limit:int=20, sess:Session=Depends(db.session)):
     return server.getItemBunch(order_by, offset, limit, sess)
@@ -32,7 +30,8 @@ def deleteItem(item_id:UUID, sess:Session=Depends(db.session)):
 
 if __name__ == "__main__":
     import logging.config
+    import uvicorn
     import config
     logging.config.dictConfig(config.get("log.config"))
-    import uvicorn
+    db.init()
     uvicorn.run(api, **config.get("run.args"))
