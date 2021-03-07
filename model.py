@@ -4,14 +4,13 @@ from uuid import UUID
 from datetime import datetime
 
 class ItemBase(BaseModel):
-    title:str
     descr:Optional[str] = None
 
 class ItemCreate(ItemBase):
-    pass
+    title:str
 
 class ItemUpdate(ItemBase):
-    pass
+    title:Optional[str] = None
 
 class Item(ItemUpdate):
     id:UUID

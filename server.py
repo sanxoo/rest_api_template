@@ -7,7 +7,7 @@ import logging
 import model
 import db
 
-def getItemBunch(order_by:str, offset:int, limit:int, sess:Session):
+def get_item_bunch(order_by:str, offset:int, limit:int, sess:Session):
     try:
         db_item_list = sess.query(db.Item).order_by(text(order_by)).offset(offset).limit(limit).all()
         item_bunch = model.ItemBunch(
@@ -25,7 +25,7 @@ def getItemBunch(order_by:str, offset:int, limit:int, sess:Session):
         raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return item_bunch
 
-def createItem(item:model.ItemCreate, sess:Session):
+def create_item(item:model.ItemCreate, sess:Session):
     try:
         db_item = db.Item(**item.dict())
         sess.add(db_item)
@@ -38,7 +38,7 @@ def createItem(item:model.ItemCreate, sess:Session):
         raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return db_item
 
-def getItem(item_id:UUID, sess:Session):
+def get_item(item_id:UUID, sess:Session):
     try:
         db_item = sess.query(db.Item).filter(db.Item.id == item_id).first()
         if db_item is None:
@@ -50,13 +50,13 @@ def getItem(item_id:UUID, sess:Session):
         raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return db_item
 
-def updateItem(item_id:UUID, item:model.ItemUpdate, sess:Session):
+def update_item(item_id:UUID, item:model.ItemUpdate, sess:Session):
     try:
         db_item = sess.query(db.Item).filter(db.Item.id == item_id).first()
         if db_item is None:
             raise HTTPException(404, [{"msg": "item(id=%s) is not found" % (item_id), "type": "logic_error"}])
-        db_item.title = item.title
-        db_item.descr = item.descr
+        for key, value in item.dict().items():
+            if value is not None: setattr(db_item, key, value)
         sess.commit()
         sess.refresh(db_item)
     except HTTPException:
@@ -66,7 +66,7 @@ def updateItem(item_id:UUID, item:model.ItemUpdate, sess:Session):
         raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return db_item
 
-def deleteItem(item_id:UUID, sess:Session):
+def delete_item(item_id:UUID, sess:Session):
     try:
         db_item = sess.query(db.Item).filter(db.Item.id == item_id).first()
         if db_item is None:
