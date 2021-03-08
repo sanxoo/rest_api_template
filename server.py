@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 from sqlalchemy import func, text
 from uuid import UUID
@@ -21,8 +22,7 @@ def get_item_bunch(order_by:str, offset:int, limit:int, sess:Session):
     except HTTPException:
         raise
     except Exception as e:
-        logging.error(e)
-        raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
+        logging.error(e); raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return item_bunch
 
 def create_item(item:model.ItemCreate, sess:Session):
@@ -33,9 +33,10 @@ def create_item(item:model.ItemCreate, sess:Session):
         sess.refresh(db_item)
     except HTTPException:
         raise
+    except DBAPIError as e:
+        logging.error(e); raise HTTPException(409, detail=[{"msg": repr(e), "type": "db_error"}])
     except Exception as e:
-        logging.error(e)
-        raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
+        logging.error(e); raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return db_item
 
 def get_item(item_id:UUID, sess:Session):
@@ -46,8 +47,7 @@ def get_item(item_id:UUID, sess:Session):
     except HTTPException:
         raise
     except Exception as e:
-        logging.error(e)
-        raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
+        logging.error(e); raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return db_item
 
 def update_item(item_id:UUID, item:model.ItemUpdate, sess:Session):
@@ -61,9 +61,10 @@ def update_item(item_id:UUID, item:model.ItemUpdate, sess:Session):
         sess.refresh(db_item)
     except HTTPException:
         raise
+    except DBAPIError as e:
+        logging.error(e); raise HTTPException(409, detail=[{"msg": repr(e), "type": "db_error"}])
     except Exception as e:
-        logging.error(e)
-        raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
+        logging.error(e); raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return db_item
 
 def delete_item(item_id:UUID, sess:Session):
@@ -76,6 +77,5 @@ def delete_item(item_id:UUID, sess:Session):
     except HTTPException:
         raise
     except Exception as e:
-        logging.error(e)
-        raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
+        logging.error(e); raise HTTPException(500, detail=[{"msg": repr(e), "type": "unknown_error"}])
     return None
