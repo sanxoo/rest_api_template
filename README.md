@@ -36,6 +36,10 @@ $ pipenv shell
 ```
 $ curl -i http://localhost:8080/items
 ```
+5. API Docs
+```
+http://localhost:8080/docs
+```
 
 ### 기타
 VSCode에서 작업하려면 .vscode/settings.json 파일에 설정이 필요, 아래는 샘플
@@ -45,4 +49,4 @@ VSCode에서 작업하려면 .vscode/settings.json 파일에 설정이 필요, �
     "python.testing.pytestEnabled": true
 }
 ```
-궁굼한 것들은 Google에 다 있음
+궁굼한 것들은 [Google](https://google.com) ^^
