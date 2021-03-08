@@ -26,3 +26,19 @@ class ItemBunch(BaseModel):
     total_count:int
     count:int
     list:List[Item]
+
+class File(BaseModel):
+    name:str
+    created:datetime
+    updated:datetime
+    item_id:UUID
+    class Config:
+        orm_mode = True
+
+class FileBunch(BaseModel):
+    item_id:UUID
+    offset:int
+    limit:int
+    total_count:int
+    count:int
+    list:List[File]

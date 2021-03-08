@@ -93,3 +93,18 @@ def test_item_delete_with_not_found_id(test_sess):
     detail = res.json()["detail"][0]
     assert detail["msg"] != ""
     assert detail["type"] == "logic_error"
+
+def test_item_delete_with_file(test_sess):
+
+    item = {"title": "item_1", "descr": "item 1"}
+    db_item = db.Item(**item)
+    test_sess.add(db_item)
+    test_sess.commit()
+    test_sess.add(db.File(name="file_1", item_id=db_item.id))    
+    test_sess.commit()
+
+    res = client.delete("/items/%s" % (db_item.id))
+    assert res.status_code == 409
+    detail = res.json()["detail"][0]
+    assert detail["msg"] != ""
+    assert detail["type"] == "logic_error"

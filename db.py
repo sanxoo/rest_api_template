@@ -1,5 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, DateTime
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, DateTime, ForeignKey
 from fastapi_utils.guid_type import GUID, GUID_DEFAULT_SQLITE
 from datetime import datetime
 from sqlalchemy import create_engine
@@ -16,6 +17,13 @@ class Item(Base):
     descr = Column(String)
     created = Column(DateTime, default=datetime.now)
     updated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+class File(Base):
+    __tablename__ = "files"
+    name = Column(String, primary_key=True)
+    created = Column(DateTime, default=datetime.now)
+    updated = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    item_id = Column(GUID, ForeignKey("items.id"))
 
 real_engine = create_engine(config.get("database.url").get("real"), connect_args={"check_same_thread": False})
 

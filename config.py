@@ -1,5 +1,4 @@
 _config = {
-
     "log.config": {
         "version": 1,
         "formatters": {
@@ -37,7 +36,9 @@ _config = {
     "database.url": {
         "real": "sqlite:///./db.sqlite/real.db",
         "test": "sqlite:///./db.sqlite/test.db"
-    }
+    },
+
+    "file.path": "./files"
 }
 
 get = _config.get
